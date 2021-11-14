@@ -40,8 +40,29 @@ class User {
       }).then((result) => {
         resolve(result);
       }).catch((error) => {
-        console.log(error);
         reject(error);
+      }).finally(() => {
+        prisma.$disconnect();
+      });
+    });
+  }
+
+  updateBio() {
+    return new Promise((resolve, reject) => {
+      prisma.profile.update({
+        where: {
+          userId: this.userData.id,
+        },
+        data: {
+          bio: this.userData.bio,
+        },
+      }).then((result) => {
+        resolve(result);
+      }).catch((error) => {
+        if (error.code === 'P2025') {
+          reject(createError.BadRequest(error.meta.cause));
+        }
+        reject(createError.InternalServerError(error.code));
       }).finally(() => {
         prisma.$disconnect();
       });
