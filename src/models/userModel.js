@@ -2,7 +2,9 @@
 const createError = require('http-errors');
 const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  errorFormat: 'pretty',
+});
 
 class User {
   constructor(userData) {
@@ -28,31 +30,19 @@ class User {
 
   updateUser() {
     return new Promise((resolve, reject) => {
-      prisma.user.upsert({
-        where: { id: this.userData.id || 0 },
-        create: {
-          id: this.userData.id,
-          email: this.userData.email,
+      prisma.user.updateMany({
+        where: { id: this.userData.id },
+        data: {
           name: this.userData.name,
           gender: this.userData.gender,
-          Phone: this.userData.phone,
-          profile: {
-            bio: this.userData.bio,
-          },
-        },
-        update: {
-          id: this.userData.id,
-          email: this.userData.email,
-          name: this.userData.name,
-          gender: this.userData.gender,
-          Phone: this.userData.phone,
-          profile: {
-            bio: this.userData.bio,
-          },
+          phone: this.userData.phone,
         },
       }).then((result) => {
         resolve(result);
-      }).catch((error) => reject(error)).finally(() => {
+      }).catch((error) => {
+        console.log(error);
+        reject(error);
+      }).finally(() => {
         prisma.$disconnect();
       });
     });

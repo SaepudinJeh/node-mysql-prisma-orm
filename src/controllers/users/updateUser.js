@@ -3,13 +3,17 @@ const { User } = require('../../models');
 const updateUser = async (req, res, next) => {
   try {
     const {
-      id, name, email, bio,
+      name, email, bio, gender, phone,
     } = req.body;
+
+    const { id } = req.params;
 
     const payload = {
       id,
       name,
       email,
+      gender,
+      phone,
       profile: {
         create: { bio },
       },
@@ -17,11 +21,19 @@ const updateUser = async (req, res, next) => {
 
     const user = new User(payload);
 
-    await user.updateUser().then((result) => {
-      res.json(result);
-    }).catch((error) => {
-      next(error);
-    });
+    const checkUser = await User.findUserById(id);
+
+    if (checkUser === null) {
+      const createNewUser = await user.save();
+
+      res.json({
+        createNewUser,
+      });
+    }
+
+    const upUser = await user.updateUser();
+
+    res.json(upUser);
   } catch (error) {
     next(error);
   }

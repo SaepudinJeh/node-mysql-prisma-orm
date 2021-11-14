@@ -23,6 +23,6 @@ model User {
   name      String
   profile   Profile?
   gender    String?
-  phone     Int?
+  phone     String?
   status    Boolean      @default(true)
 }
