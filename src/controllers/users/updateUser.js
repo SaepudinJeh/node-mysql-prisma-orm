@@ -2,36 +2,37 @@ const { User } = require('../../models');
 
 const updateUser = async (req, res, next) => {
   try {
-    const {
-      name, email, bio, gender, phone,
-    } = req.body;
+    const { newUsername, gender, phone } = req.body;
 
-    const { id } = req.params;
+    const { _id, email, username } = req.user;
 
-    const payload = {
-      id,
-      name,
-      email,
+    const payloadUpdate = {
+      id: _id,
+      username: newUsername,
       gender,
       phone,
-      profile: {
-        create: { bio },
-      },
     };
 
-    const user = new User(payload);
+    const newPayload = {
+      id: _id,
+      email,
+      username,
+    };
 
-    const checkUser = await User.findUserById(id);
+    const newUser = new User(newPayload);
+    const updatedUser = new User(payloadUpdate);
+
+    const checkUser = await User.findUserById(_id);
 
     if (checkUser === null) {
-      const createNewUser = await user.save();
+      const createNewUser = await newUser.save();
 
       res.json({
         createNewUser,
       });
     }
 
-    const upUser = await user.updateUser();
+    const upUser = await updatedUser.updateUser();
 
     res.json(upUser);
   } catch (error) {

@@ -10,7 +10,7 @@ router
   .get('/user/:id', getUserById)
   .post('/user', verifyAccessToken, createUser)
   .delete('/user/:id', deleteUserById)
-  .patch('/user/:id', userUpdate)
+  .patch('/user', verifyAccessToken, userUpdate)
   .patch('/bio', verifyAccessToken, updateBio);
 
 module.exports = router;

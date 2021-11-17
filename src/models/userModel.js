@@ -14,7 +14,16 @@ class User {
   async save() {
     return new Promise((resolve, reject) => {
       prisma.user.create({
-        data: this.userData,
+        data: {
+          id: this.userData.id,
+          email: this.userData.email,
+          username: this.userData.username,
+          profile: {
+            create: {
+              bio: this.userData.bio,
+            },
+          },
+        },
       }).then((result) => {
         resolve(result);
       }).catch((error) => {
@@ -30,10 +39,10 @@ class User {
 
   updateUser() {
     return new Promise((resolve, reject) => {
-      prisma.user.updateMany({
+      prisma.user.update({
         where: { id: this.userData.id },
         data: {
-          name: this.userData.name,
+          username: this.userData.username,
           gender: this.userData.gender,
           phone: this.userData.phone,
         },

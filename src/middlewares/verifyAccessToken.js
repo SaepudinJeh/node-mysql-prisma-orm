@@ -10,7 +10,7 @@ const verifyAccessToken = async (req, res, next) => {
     const getToken = await req.get('Authorization').split(' ')[1];
     const decode = jwtDecode(getToken, { Headers: true });
 
-    req.user = { _id: decode._id, email: decode.email };
+    req.user = { _id: decode._id, email: decode.email, username: decode.username };
 
     next();
   } catch (error) {
