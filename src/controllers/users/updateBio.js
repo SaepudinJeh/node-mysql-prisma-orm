@@ -2,12 +2,12 @@ const { User } = require('../../models');
 
 const updateBio = async (req, res, next) => {
   try {
-    const { idUser } = req.params;
+    const { _id } = req.user;
 
     const payloadBio = req.body.bio;
 
     const payload = {
-      id: idUser,
+      id: _id,
       bio: payloadBio,
     };
 

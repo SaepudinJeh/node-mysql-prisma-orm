@@ -3,12 +3,14 @@ const {
   userUpdate, getUsers, getUserById, createUser, deleteUserById, updateBio,
 } = require('../controllers');
 
+const { verifyAccessToken } = require('../middlewares');
+
 router
   .get('/users', getUsers)
   .get('/user/:id', getUserById)
-  .post('/user', createUser)
+  .post('/user', verifyAccessToken, createUser)
   .delete('/user/:id', deleteUserById)
   .patch('/user/:id', userUpdate)
-  .patch('/bio/:idUser', updateBio);
+  .patch('/bio', verifyAccessToken, updateBio);
 
 module.exports = router;
