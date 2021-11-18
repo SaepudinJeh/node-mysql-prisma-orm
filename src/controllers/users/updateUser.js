@@ -1,4 +1,4 @@
-const createHttpError = require('http-errors');
+const createError = require('http-errors');
 const { User } = require('../../models');
 
 const updateUser = async (req, res, next) => {
@@ -11,7 +11,7 @@ const updateUser = async (req, res, next) => {
 
     // Check User
     if (checkUser === null) {
-      return next(createHttpError.BadRequest('User not found!'));
+      return next(createError.BadRequest('User not found!'));
     }
 
     const payloadUpdate = {
