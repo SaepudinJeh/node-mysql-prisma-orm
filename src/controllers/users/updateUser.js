@@ -1,40 +1,34 @@
+const createHttpError = require('http-errors');
 const { User } = require('../../models');
 
 const updateUser = async (req, res, next) => {
   try {
-    const { newUsername, gender, phone } = req.body;
+    const { username, gender, phone } = req.body;
 
-    const { _id, email, username } = req.user;
+    const { _id } = req.user;
+
+    const checkUser = await User.findUserById(_id);
+
+    // Check User
+    if (checkUser === null) {
+      return next(createHttpError.BadRequest('User not found!'));
+    }
 
     const payloadUpdate = {
       id: _id,
-      username: newUsername,
+      username,
       gender,
       phone,
     };
 
-    const newPayload = {
-      id: _id,
-      email,
-      username,
-    };
-
-    const newUser = new User(newPayload);
     const updatedUser = new User(payloadUpdate);
 
-    const checkUser = await User.findUserById(_id);
+    const user = await updatedUser.updateUser();
 
-    if (checkUser === null) {
-      const createNewUser = await newUser.save();
-
-      res.json({
-        createNewUser,
-      });
-    }
-
-    const upUser = await updatedUser.updateUser();
-
-    res.json(upUser);
+    res.json({
+      message: 'Successfully',
+      user,
+    });
   } catch (error) {
     next(error);
   }

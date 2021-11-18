@@ -1,32 +1,42 @@
 /* eslint-disable consistent-return */
 const createError = require('http-errors');
+const ObjectId = require('bson-objectid');
 const { User } = require('../../models');
+const { newUserValidate } = require('../../validators');
 
 const createUser = async (req, res, next) => {
-  if (req.body === null) {
-    return next(createError.NotFound());
-  }
+  try {
+    const { _id, email, username } = req.user;
 
-  const {
-    name, email, bio, id,
-  } = req.body;
+    const checkId = ObjectId.isValid(_id);
 
-  const payload = {
-    id,
-    name,
-    email,
-    profile: {
-      create: { bio },
-    },
-  };
+    // Check bson id
+    if (!checkId) {
+      return next(createError.BadGateway('Invalid ID!'));
+    }
 
-  const user = new User(payload);
+    const payload = newUserValidate.validate({
+      id: _id,
+      email,
+      username,
+    });
 
-  await user.save().then((result) => {
-    res.json(result);
-  }).catch((error) => {
+    // Check Validator value
+    if (payload.error) {
+      return next(createError.BadRequest(payload.error.message));
+    }
+
+    const user = new User(payload.value);
+
+    const newUser = await user.save();
+
+    res.json({
+      message: 'successfully',
+      newUser,
+    });
+  } catch (error) {
     next(error);
-  });
+  }
 };
 
 module.exports = createUser;
