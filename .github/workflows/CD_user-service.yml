@@ -29,4 +29,4 @@ jobs:
         echo DATABASE_URL =${{ secrets.DATABASE_URL }} >> .env
     - run: npm ci --only=production
     - run: npx prisma migrate deploy
-    - run: npm run start
+    - run: pm2 restart users-service
