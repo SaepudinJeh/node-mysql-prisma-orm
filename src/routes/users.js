@@ -8,7 +8,7 @@ const { verifyAccessToken } = require('../middlewares');
 router
   .get('/users', getUsers)
   .get('/user/:id', getUserById)
-  .post('/user', verifyAccessToken, createUser)
+  .post('/user', createUser)
   .delete('/user/:id', deleteUserById)
   .patch('/user', verifyAccessToken, userUpdate)
   .patch('/bio', verifyAccessToken, updateBio);

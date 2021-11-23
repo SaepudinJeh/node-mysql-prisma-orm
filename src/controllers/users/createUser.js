@@ -6,9 +6,9 @@ const { newUserValidate } = require('../../validators');
 
 const createUser = async (req, res, next) => {
   try {
-    const { _id, email, username } = req.user;
+    const { id, username, email } = req.body;
 
-    const checkId = ObjectId.isValid(_id);
+    const checkId = ObjectId.isValid(id);
 
     // Check bson id
     if (!checkId) {
@@ -16,7 +16,7 @@ const createUser = async (req, res, next) => {
     }
 
     const payload = newUserValidate.validate({
-      id: _id,
+      id,
       email,
       username,
     });

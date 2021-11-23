@@ -28,6 +28,10 @@ module.exports = {
         }),
         algorithms: ['RS256'],
         credentialsRequired: true,
+      }).unless({
+        path: [
+          { url: '/user', method: ['POST'] },
+        ],
       }),
     );
 
