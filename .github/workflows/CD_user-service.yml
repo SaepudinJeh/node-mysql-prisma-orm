@@ -23,10 +23,16 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - name: stop-mysql
+      run: |
+        sudo systemctl stop mysql.service
     - name: create env file
       run: |
         touch .env
         echo DATABASE_URL =${{ secrets.DATABASE_URL }} >> .env
     - run: npm ci --only=production
+    - name: start mysql
+    - run : |
+        sudo systemctl start mysql.service
     - run: npx prisma migrate deploy
     - run: pm2 restart users-service
