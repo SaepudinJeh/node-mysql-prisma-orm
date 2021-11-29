@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+require('dotenv').config();
+
 const express = require('express');
 const createError = require('http-errors');
 
@@ -22,6 +25,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(3300, () => {
-  console.log('🚀 Server ready at: port 3300 ...');
+app.listen(process.env.PORT, () => {
+  console.log(`🚀 Server ready at: port ${process.env.PORT}...`);
 });
