@@ -28,5 +28,5 @@ jobs:
         touch .env
         echo DATABASE_URL =${{ secrets.DATABASE_URL }} >> .env
     - run: npm ci --only=production
-    - run: npx prisma migrate deploy
+#     - run: npx prisma migrate deploy
     - run: pm2 restart users-service
